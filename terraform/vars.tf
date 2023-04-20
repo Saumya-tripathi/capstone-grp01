@@ -4,11 +4,11 @@ variable "region" {
 }
 variable "access_id" {
   type       = string
-  default     = "AKIA4FKLCYN44QD3CUMV"
+  default     = "YOUR-ACCESS-ID"
 }
 variable "access_key" {
   type       = string
-  default     = "C6xpPjSqH5BanfF12jr/u9truz7gZBO9BRO0gz31"
+  default     = "YOUR-ACCESS-KEY"
 }
 variable "data_ingestion_lambda_filename" {
   type       = string
@@ -20,5 +20,5 @@ variable "data_processor_lambda_filename" {
 }
 variable "email_id" {
   type       = string
-  default     = "psitsaumya@gmail.com"
+  default     = "YOUR_EMAIL_ID"
 }
