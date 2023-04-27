@@ -31,12 +31,12 @@ resource "aws_iam_role_policy" "iot_kinesis_policy" {
 
 resource "aws_iot_policy_attachment" "iot_kinesis_policy_01" {
   policy = aws_iam_role_policy.iot_kinesis_policy.name
-  target = aws_iot_certificate.cert01.arn  # change
+  target = aws_iot_certificate.SP01.arn
 }
 
 resource "aws_iot_policy_attachment" "iot_kinesis_policy_02" {
   policy = aws_iam_role_policy.iot_kinesis_policy.name
-  target = aws_iot_certificate.cert02.arn  # change
+  target = aws_iot_certificate.SP02.arn
 }
 
 resource "aws_iot_topic_rule" "rule_01" {

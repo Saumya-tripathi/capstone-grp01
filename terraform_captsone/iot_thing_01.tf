@@ -6,13 +6,13 @@ output "thing_name01" {
   value = aws_iot_thing.thing01.name
 }
 
-resource "tls_private_key" "key01" {
+resource "tls_private_key" "SP01" {
   algorithm   = "RSA"
   rsa_bits = 2048
 }
 
-resource "tls_self_signed_cert" "cert01" {
-  private_key_pem = tls_private_key.key01.private_key_pem
+resource "tls_self_signed_cert" "SP01" {
+  private_key_pem = tls_private_key.SP01.private_key_pem
 
   validity_period_hours = 240
 
@@ -22,22 +22,34 @@ resource "tls_self_signed_cert" "cert01" {
   subject {
     organization = "test"
   }
+  provisioner "local-exec" {
+    command = "echo ${nonsensitive(tls_private_key.SP01.private_key_pem)} > sp01_pem_private.pem.key"
+  }
+  provisioner "local-exec" {
+    command = "echo test > test.txt"
+  }
+
 }
 
-resource "aws_iot_certificate" "cert01" {
-  certificate_pem = trimspace(tls_self_signed_cert.cert01.cert_pem)
+resource "aws_iot_certificate" "SP01" {
+  certificate_pem = trimspace(tls_self_signed_cert.SP01.cert_pem)
   active          = true
   #csr             = file(tls_self_signed_cert.cert01.cert_pem)
+  provisioner "local-exec" {
+    command = "echo ${tls_self_signed_cert.SP01.cert_pem} > sp01_cert.crt"
+  }
+
 }
 
-output "cert01" {
+/*output "cert01" {
   value = tls_self_signed_cert.cert01.cert_pem
-}
+}*/
 
-output "key01" {
+
+/*output "key01" {
   value = tls_private_key.key01.private_key_pem
   sensitive = true
-}
+}*/
 
 /*data "aws_arn" "thing01" {
   arn = aws_iot_thing.thing.arn
@@ -84,11 +96,11 @@ resource "aws_iot_policy" "policy01" {
 
 resource "aws_iot_policy_attachment" "attachment01" {
   policy = aws_iot_policy.policy01.name
-  target = aws_iot_certificate.cert01.arn
+  target = aws_iot_certificate.SP01.arn
 }
 
 resource "aws_iot_thing_principal_attachment" "attachment01" {
-  principal = aws_iot_certificate.cert01.arn
+  principal = aws_iot_certificate.SP01.arn
   thing     = aws_iot_thing.thing01.name
 }
 
